@@ -1,13 +1,18 @@
 import { Router } from 'express';
-import { requireAuth, RequireAuth } from '../middleware/auth.js';
-import { AppError, requirePollOwnership } from '../middleware/error_handler.js';
+import { requireAuth } from '../middleware/auth.js';
+import { AppError, requirePollOwnership, checkVoteAnonymity } from '../middleware/error_handler.js';
 import { getAllPolls, getPollById, createPoll, getVotesForPoll } from '../models/polls.js';
+import { findById } from '../models/users.js';
 
 const router = Router();
 
 router.get('/', async (req, res) => {
     try {
         const polls = await getAllPolls();
+        const creators = await findById(polls.map(p => p.user_id));
+        polls.forEach(poll => {
+            poll.creator = creators.find(c => c.id === poll.user_id);
+        });
         //Get the votes for each poll, add the number, then add the property to each poll object
         const voteCount = await getVotesForPoll(polls.map(p => p.id));
         polls.forEach(poll => {
@@ -19,7 +24,7 @@ router.get('/', async (req, res) => {
     }
 });
 
-router.post('/', RequireAuth, async (req, res) => {
+router.post('/', requireAuth, async (req, res) => {
     const { title, options, description, allowAnonymous } = req.body;
     const userId = req.user.id;
 
