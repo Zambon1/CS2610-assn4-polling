@@ -25,3 +25,11 @@ export const getVotesForPoll = async (pollId) => {
   );
   return rows;
 };
+
+export const getOptionsForPoll = async (pollId) => {
+  const { rows } = await db.query(
+    "SELECT options FROM polls WHERE poll_id = $1",
+    [pollId]
+  );
+  return rows[0]?.options || [];
+};
