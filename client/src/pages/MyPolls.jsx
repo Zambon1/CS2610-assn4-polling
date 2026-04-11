@@ -82,7 +82,11 @@ function MyPolls() {
 
   return (
     <div className="my-polls-page">
-      <h2 className="my-polls-heading">My Polls</h2>
+      <header className="my-polls-header">
+        <p className="my-polls-eyebrow">Your Dashboard</p>
+        <h2 className="my-polls-heading">My Polls</h2>
+        <p className="my-polls-description">Manage polls you have created and remove any that are no longer needed.</p>
+      </header>
 
       {error && <p className="error-message">{error}</p>}
 
