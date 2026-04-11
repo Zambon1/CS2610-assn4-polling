@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate, Link } from "react-router";
+import { useNavigate, Link, useLocation } from "react-router";
 import { useAuth } from "../hooks/useAuth";
 
 function Login() {
@@ -8,10 +8,12 @@ function Login() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const location = useLocation();
+  const redirectFromQuery = new URLSearchParams(location.search).get("redirect");
 
   // If the user is already logged in, redirect them
   if (user) {
-    navigate(redirectUrl || "/", { replace: true });
+    navigate(redirectFromQuery || redirectUrl || "/", { replace: true });
     return null;
   }
 
@@ -35,7 +37,7 @@ function Login() {
     setUser(data.user);
 
     // Redirect to the page they were trying to access, or home
-    const destination = redirectUrl || "/";
+    const destination = redirectFromQuery || redirectUrl || "/";
     setRedirectUrl("/");
     navigate(destination);
   }

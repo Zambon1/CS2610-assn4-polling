@@ -35,6 +35,23 @@ export async function findById(id) {
   return result.rows[0] || null;
 }
 
+export async function findByIds(ids) {
+  if (!Array.isArray(ids) || ids.length === 0) {
+    return [];
+  }
+
+  const uniqueIds = [...new Set(ids.map((id) => Number(id)).filter(Boolean))];
+  if (uniqueIds.length === 0) {
+    return [];
+  }
+
+  const result = await pool.query(
+    "SELECT id, username, email, created_at FROM users WHERE id = ANY($1::int[])",
+    [uniqueIds]
+  );
+  return result.rows;
+}
+
 export async function verifyPassword(password, passwordHash) {
   return bcrypt.compare(password, passwordHash);
 }

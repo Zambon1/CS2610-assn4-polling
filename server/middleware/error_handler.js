@@ -24,7 +24,7 @@ export async function requirePollOwnership(req, res, next) {
         return next(new AppError("Poll not found.", 404));
     }
 
-    if (result.rows[0].user_id !== req.user.id) {
+    if (Number(result.rows[0].user_id) !== Number(req.user.id)) {
         return next(new AppError("You do not have permission to perform this action.", 403));
     }
 

@@ -21,12 +21,19 @@ function Navbar() {
       <div className="navbar-brand">
         <Link to="/"><img src={logo} alt="My App" className="navbar-logo" /></Link>
       </div>
-      {!isAuthPage && (
-        <div className="navbar-links">
-          <Link to="/">Home</Link>
-          {user ? (
+      <div className="navbar-links">
+        <Link to="/">Browse Polls</Link>
+        {!isAuthPage &&
+          (user ? (
             <>
               <span className="navbar-user">Hi, {user.username}</span>
+              <span className="navbar-separator">|</span>
+              <Link to="/my-polls" className="navbar-link">
+                My Polls</Link>
+              <span className="navbar-separator">|</span>
+              <Link to="/polls/new" className="navbar-link">
+                New Poll
+              </Link>
               <button onClick={handleLogout} className="btn btn-logout">
                 Logout
               </button>
@@ -36,9 +43,8 @@ function Navbar() {
               <Link to="/login">Login</Link>
               <Link to="/register">Register</Link>
             </>
-          )}
-        </div>
-      )}
+          ))}
+      </div>
     </nav>
   );
 }
